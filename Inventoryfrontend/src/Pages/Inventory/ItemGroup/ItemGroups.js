@@ -43,7 +43,7 @@ function ItemGroups() {
         <div
           style={{
             width: "80vw",
-            height: "70vh",
+            height: "63vh",
             overflow: "auto",
             display: "flex",
             justifyContent: "space-around",

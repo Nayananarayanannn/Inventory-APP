@@ -1,0 +1,71 @@
+          
+          *{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+body {
+  background: #111;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+.button-wrap{
+  margin:10px auto;
+  text-align: center;
+} 
+.hover-button{
+  position:relative;
+  box-sizing: border-box;
+  background:rgba(255,255,255,0);
+  border:none;
+  font-size: 1.5rem;
+  color:turquoise;
+  transition: all 0.2s ease;
+  -webkit-transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  -ms-transition: all 0.2s ease;
+  -o-transition: all 0.2s ease;
+  overflow:hidden;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  width:200px;
+  height:200px;
+} 
+.hover-button:before{
+  --size:0;
+  content:'';
+  position:absolute;
+  left:var(--x);
+  top:var(--y);
+  width:var(--size);
+  height:var(--size);
+  background:radial-gradient(circle closest-side, #E2DFDA, transparent);
+  transform:translate(-50%, -50%);
+  -webkit-transform:translate(-50%, -50%);
+  -moz-transform:translate(-50%, -50%);
+  -ms-transform:translate(-50%, -50%);
+  -o-transform:translate(-50%, -50%);
+  transition:width 0.2s ease, height 0.2s ease;
+  -webkit-transition:width 0.2s ease, height 0.2s ease;
+  -moz-transition:width 0.2s ease, height 0.2s ease;
+  -ms-transition:width 0.2s ease, height 0.2s ease;
+  -o-transition:width 0.2s ease, height 0.2s ease;
+}
+.hover-button:hover:before{
+  --size:200px;
+}
+.hover-button:hover{
+  color:#111;
+  cursor: none;
+}
+.hover-button span{
+  position:relative;
+  font-weight:bold;
+}
+          
+      

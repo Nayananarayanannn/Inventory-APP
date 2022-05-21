@@ -141,9 +141,11 @@ nav.main-menu.expanded {
   opacity: 1;
 
 }
-
+.active{
+  color: #4B4B4B;
+}
 .main-menu {
-  background: #ccf1f4;
+  background: #89e2ea;
   position: absolute;
   top: 0;
   bottom: 0;

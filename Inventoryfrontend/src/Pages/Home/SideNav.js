@@ -35,24 +35,24 @@ function SideNav() {
           </li>
 
           <li>
-            <a href="/home/inventory">
+            <a href="/home/inventory/items">
               <span className="fa-lg fa">
                 <AddShoppingCartIcon />
               </span>
-              <span class="nav-text">Inventory</span>
+              <span activeClassName="active" class="nav-text">Inventory</span>
             </a>
           </li>
-          <li>
-            <a href="http://startific.com">
+          {/* <li>
+            <a href="/home/sales/customers">
               <span className="fa-lg fa">
                 <DescriptionIcon />
               </span>
               <span class="nav-text">Sales</span>
             </a>
-          </li>
+          </li> */}
 
           <li>
-            <a href="http://startific.com">
+            <a href="/home/purchase/Vendors">
               <span className="fa-lg fa">
                 <StoreIcon />
               </span>

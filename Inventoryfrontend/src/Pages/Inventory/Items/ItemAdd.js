@@ -8,67 +8,104 @@ import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Alert, FormLabel, InputAdornment } from "@mui/material";
+import { Alert, FormControl, FormLabel, InputAdornment, InputLabel, MenuItem, Select } from "@mui/material";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
-// form validation function
-const validate = (values) => {
-  const errors = {};
-  // empty id
-  if (!values.id) {
-    errors.itemName = "*Id cannot be empty";
-  }
+  // form validation function
+  const validate = (values) => {
+    const errors = {};
+    // empty id
+    if (!values.id) {
+      errors.id = "*Id cannot be empty";
+    }
+    // empty itemName
+    if (!values.itemName) {
+      errors.itemName = "*Item Name cannot be empty";
+    }
 
-  // empty itemName
-  if (!values.itemName) {
-    errors.itemName = "*Item Name cannot be empty";
-  }
+    if (!values.unit) {
+      errors.unit = "*Unit cannot be empty";
+    }
 
-  if (!values.unit) {
-    errors.unit = "*Unit cannot be empty";
-  }
+    if (!values.sellingPrice) {
+      errors.sellingPrice = "*Selling Price cannot be empty";
+    }
 
-  if (!values.sellingPrice) {
-    errors.sellingPrice = "*Selling Price cannot be empty";
-  }
+    if (!values.costPrice) {
+      errors.costPrice = "*Cost Price cannot be empty";
+    }
 
-  if (!values.group) {
-    errors.group = "*Item Group cannot be empty";
-  }
+    if (!values.openingStock) {
+      errors.openingStock = "*Opening Stock cannot be empty";
+    }
 
-  if (!values.costPrice) {
-    errors.costPrice = "*Cost Price cannot be empty";
-  }
+    if (!values.reorderPoint) {
+      errors.reorderPoint = "*Reorder Point cannot be empty";
+    }
 
-  if (!values.openingStock) {
-    errors.openingStock = "*Opening Stock cannot be empty";
-  }
-
-  if (!values.reorderPoint) {
-    errors.reorderPoint = "*Reorder Point cannot be empty";
-  }
-
-  return errors;
-};
+    return errors;
+  };
 
 function ItemAdd() {
   const navigate = useNavigate();
 
   const [err, setErr] = useState();
   const [success, setSuccess] = useState();
-  const [pic,setPic] = useState();
+  const [pic, setPic] = useState();
+  const [group, setGroup] = useState();
+  const [groups, setGroups] = useState();
+  const [vendors,setVendors] = useState();
+  const [vendor,setVendor] = useState();
+
+  // fetch all groups api
+  const listGroups = () => {
+    var config = {
+      method: "get",
+      url: "/api/itemGroup",
+      headers: {},
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        setGroups(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  // list vendors apo call
+  const listVendors = () => {
+    var config = {
+      method: "get",
+      url: "/api/vendor",
+      headers: {},
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        setVendors(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    listGroups();
+    listVendors();
+  }, []);
 
   // post profile picture
   const postDetails = (pics) => {
-
     // if no pic added, show warning
     if (pics === undefined) {
-      setErr("Please Select an image")
+      setErr("Please Select an image");
       return;
     }
 
@@ -97,7 +134,7 @@ function ItemAdd() {
 
     // if files are not prefered image formats
     else {
-      setErr("Only image files allowed")
+      setErr("Only image files allowed");
     }
   };
 
@@ -135,13 +172,13 @@ function ItemAdd() {
       height: formik.values.height,
       width: formik.values.width,
       manufacturer: formik.values.manufacturer,
-      group: formik.values.group,
+      group: group,
       brand: formik.values.brand,
       sellingPrice: formik.values.sellingPrice,
       costPrice: formik.values.costPrice,
       openingStock: formik.values.openingStock,
       reorderPoint: formik.values.reorderPoint,
-      vendor: formik.values.vendor,
+      vendor: vendor,
       description: formik.values.description,
       image: pic,
     });
@@ -158,6 +195,8 @@ function ItemAdd() {
     axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
+        listGroups();
+        listVendors();
         setSuccess("New item Successfully Added");
         setTimeout(navigate("/home/inventory/items"), 3000);
       })
@@ -170,13 +209,24 @@ function ItemAdd() {
   // handle submit
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!formik.values.id) {
-      setErr("Mandatory fields cannot be empty");
-    } else if (Object.entries(formik.errors).length) {
+    if (!group) {
+      setErr("Group field cannot be empty");
+    } else if (!vendor) {
+      setErr("Vendor field cannot be empty")
+    }
+     else if (Object.entries(formik.errors).length) {
       setErr("Mandatory fields cannot be empty");
     } else {
       addItem();
     }
+  };
+
+  const handleGroupChange = (event) => {
+    setGroup(event.target.value);
+  };
+
+  const handleVendorChange = (event) => {
+    setVendor(event.target.value);
   };
 
   return (
@@ -320,13 +370,26 @@ function ItemAdd() {
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    name="group"
-                    value={formik.values.group}
-                    onChange={formik.handleChange}
-                    label="Item Group"
-                  />
+                  <FormControl style={{ width: "100%" }}>
+                    <InputLabel id="demo-simple-select-filled-label">
+                      Group
+                    </InputLabel>
+                    <Select
+                      style={{ width: "100%" }}
+                      labelId="demo-simple-select-autowidth-label"
+                      id="demo-simple-select-autowidth"
+                      value={group}
+                      label="Group"
+                      onChange={handleGroupChange}
+                    >
+                      {groups?.map((group) => (
+                        <MenuItem value={group.groupName}>
+                          {group.groupName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
                   {formik.errors.group ? (
                     <div className="error">{formik.errors.group}</div>
                   ) : null}
@@ -401,13 +464,25 @@ function ItemAdd() {
                   ) : null}
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    name="vendor"
-                    value={formik.values.vendor}
-                    onChange={formik.handleChange}
-                    label="Preferred Vendor"
-                  />
+                  <FormControl style={{ width: "100%" }}>
+                    <InputLabel id="demo-simple-select-filled-label">
+                      Vendor
+                    </InputLabel>
+                    <Select
+                      style={{ width: "100%" }}
+                      labelId="demo-simple-select-autowidth-label"
+                      id="demo-simple-select-autowidth"
+                      value={vendor}
+                      label="Vendor"
+                      onChange={handleVendorChange}
+                    >
+                      {vendors?.map((vendor) => (
+                        <MenuItem value={vendor.vendorName}>
+                          {vendor.vendorName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                   <TextField

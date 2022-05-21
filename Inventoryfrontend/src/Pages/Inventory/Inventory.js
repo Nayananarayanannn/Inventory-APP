@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom';
-import SubNav from '../Home/SubNav';
+import SubNav from '../../Components/SubNav';
 import InventoryAdjustmentsAdd from './InventoryAdjustments/InventoryAdjustmentsAdd';
 import InventotyAdjustments from './InventoryAdjustments/InventotyAdjustments';
 import ItemGroupAdd from './ItemGroup/ItemGroupAdd';

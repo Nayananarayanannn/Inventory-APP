@@ -24,7 +24,7 @@ const addItem = asyncHandler(async (req, res) => {
   //   find particular item id exists
   const idExists = await Item.findOne({ id: id });
   if (idExists) {
-    res.status(402).json("Id is not unique");
+   return res.status(402).json("Id is not unique");
   }
 
   const itemExists = await Item.findOne({
@@ -32,7 +32,7 @@ const addItem = asyncHandler(async (req, res) => {
   });
   //  validate if item already exists
   if (itemExists) {
-    res.status(401).json("Item Already exists");
+   return res.status(401).json("Item Already exists");
   }
 
   const item = await Item.create({
@@ -86,4 +86,12 @@ const listItems = asyncHandler(async (req, res) => {
   res.send(items);
 });
 
-module.exports = { addItem, listItems };
+const fetchItemDetails = asyncHandler(async (req, res) => {
+  const { itemName } = req.body;
+  const item = await Item.find({ itemName: itemName });
+  if (item) {
+    res.send(item);
+  }
+});
+
+module.exports = { addItem, listItems,fetchItemDetails };
